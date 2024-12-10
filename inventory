@@ -1,3 +1,5 @@
-Ubuntu1
-Ubuntu2
-Ubuntu3
+Ubuntu1 apache_package=apache2 php_package=libapache2-mod-php
+Ubuntu2 apache_package=apache2 php_package=libapache2-mod-php
+Ubuntu3 apache_package=apache2 php_package=libapache2-mod-php
+
+#CentOS apache_package=httpd php_package=php
