@@ -1,6 +1,6 @@
 [web_servers]
 Ubuntu1
-Fedora1
+CentOS1
 
 [db_servers]
 Ubuntu2
