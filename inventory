@@ -1,12 +1,12 @@
 [web_servers]
-Ubuntu1
-CentOS1
+Ubuntu1 apache_package=apache2 php_package=libapache2-mod-php
+CentOS1 apache_package=httpd php_package=php
 
 [db_servers]
-Ubuntu2
+Ubuntu2 apache_package=apache2 php_package=libapache2-mod-php
 
 [file_servers]
-Ubuntu3
+Ubuntu3 apache_package=apache2 php_package=libapache2-mod-php
 
 #[workstations]
 #Chris-Laptop
