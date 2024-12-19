@@ -8,7 +8,7 @@ Ubuntu2
 [file_servers]
 Ubuntu3
 
-[workstations]
-Chris-Laptop
+#[workstations]
+#Chris-Laptop
 
 
