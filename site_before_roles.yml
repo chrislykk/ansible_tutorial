@@ -4,16 +4,18 @@
   become: true
   pre_tasks:
 
-  - name: install updates (CentOS)
+  - name: update repo cache (CentOS)
+    tags: always
     dnf:
-      update_only: yes
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "CentOS"
   
-  - name: install updates (Ubuntu)
+  - name: update repo cache (Ubuntu)
+    tags: always
     apt:
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Ubuntu"
 
 
@@ -21,28 +23,43 @@
 #  become: true
 #  tasks:
 
-#  - name: add ssh key for simone
+#  - name: create ansible_admin user
+#    tags: always
+#    user:
+#      name: ansible_admin
+#      groups: root
+
+#  - name: add ssh key for ansible_admin
 #    tags: always
 #    authorized_key:
-#      user: simone
-#      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID/rI7uEwCv0zaR+dW07WPyeJtp4GnUPJ6a7i3miD8UO ansible"
-
-#- hosts: workstations
-#  become: true
-#  tasks:
-#
-#  - name: install unzip
-#    package:
-#      name: unzip
-#
-#  - name: install terraform
-#    unarchive:
-#      src: https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
-#      dest: /usr/local/bin
-#      remote_src: yes
-#      mode: 0755
+#      user: ansible_admin
+#      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFeLRxMhjvPc7u97U0bcbTEzLGSdzaVaXLNuGTz8R+P6 ansible"
+  
+#  - name: add sudoers file for ansible_admin
+#    tags: always
+#    copy:
+#      src: sudoer_ansible_admin
+#      dest: /etc/sudoers.d/ansible_admin
 #      owner: root
 #      group: root
+#      mode: 0440
+
+- hosts: workstations
+  become: true
+  tasks:
+
+  - name: install unzip
+    package:
+      name: unzip
+
+  - name: install terraform
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      mode: 0755
+      owner: root
+      group: root
 
 
 - hosts: web_servers
@@ -58,27 +75,38 @@
       state: latest
 
   - name: start httpd
-    tags: apache,httpd
+    tags: apache,httpd,
     service:
       name: "{{ apache_package }}"
       state: started
       enabled: yes
-    register: httpd
+    register: apache_service
+
 
   - name: restart httpd
     tags: apache,httpd
     service:
       name: "{{ apache_package }}"
       state: restarted
-    when: httpd.changed
+    when: apache_service.changed
 
-#  - name: change e-mail address for admin
-#    tags: apache,centos,httpd
-#    lineinfile:
-#      path: /etc/httpd/conf/httpd.conf
-#      regexp: '^ServerAdmin'
-#      line: ServerAdmin somebody@somewhere.net
-#    when: ansible_distribution == "CentOS"
+  - name: change e-mail address for admin (CentOS)
+    tags: apache,centos,httpd
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somewhere.net
+    when: ansible_distribution == "CentOS"
+    notify: restart_apache
+
+  - name: Change e-mail address for admin (Ubuntu)
+    tags: apache,ubuntu,httpd
+    lineinfile:
+      path: /etc/apache2/apache2.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somewhere.com
+    when: ansible_distribution == "Ubuntu"
+    notify: restart_apache
 
   - name: copy default html file for site
     tags: apache,apache2,httpd

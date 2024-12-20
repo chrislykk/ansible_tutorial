@@ -13,13 +13,22 @@
     state: started
     enabled: yes
 
-- name: change e-mail address for admin
+- name: change e-mail address for admin (CentOS)
   tags: apache,centos,httpd
   lineinfile:
     path: /etc/httpd/conf/httpd.conf
     regexp: '^ServerAdmin'
     line: ServerAdmin somebody@somewhere.com
   when: ansible_distribution == "CentOS"
+  notify: restart_apache
+
+  - name: Change e-mail address for admin (Ubuntu)
+  tags: apache,ubuntu,httpd
+  lineinfile:
+    path: /etc/apache2/apache2.conf
+    regexp: '^ServerAdmin'
+    line: ServerAdmin somebody@somewhere.com
+  when: ansible_distribution == "Ubuntu"
   notify: restart_apache
 
 - name: copy default html file for site

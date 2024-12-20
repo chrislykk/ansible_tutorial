@@ -8,7 +8,7 @@ Ubuntu2 apache_package=apache2 php_package=libapache2-mod-php
 [file_servers]
 Ubuntu3 apache_package=apache2 php_package=libapache2-mod-php
 
-#[workstations]
-#Chris-Laptop
+[workstations]
+Chris-Laptop
 
 
