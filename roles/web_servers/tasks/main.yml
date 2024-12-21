@@ -22,7 +22,7 @@
   when: ansible_distribution == "CentOS"
   notify: restart_apache
 
-  - name: Change e-mail address for admin (Ubuntu)
+- name: Change e-mail address for admin (Ubuntu)
   tags: apache,ubuntu,httpd
   lineinfile:
     path: /etc/apache2/apache2.conf
