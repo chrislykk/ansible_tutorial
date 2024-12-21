@@ -1,7 +1,7 @@
-- name: add ssh key for simone
+- name: add ssh key for ansible_admin
   authorized_key:
-    user: simone
-    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFeLRxMhjvPc7u97U0bcbTEzLGSdzaVaXLNuGTz8R+P6 ansible"
+    user: ansible_admin
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICs3a12H0ALwzVu64hOrzboPZl4cL63L6m6GeN4PIaoE ansible"
 
 - name: generate sshd_config file from template
   tags: ssh
